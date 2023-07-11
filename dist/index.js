@@ -71,6 +71,37 @@ app.get('/place', function (req, res) { return __awaiter(void 0, void 0, void 0,
         }
     });
 }); });
+app.get('/forecast', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, lat, lon, apiRes, weatherForcast, idxIncrement, numWeatherPoints, i, curWeatherData, dateStrSplit, monthStr, dateStr;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.query, lat = _a.lat, lon = _a.lon;
+                return [4 /*yield*/, axios_1.default.get("https://api.openweathermap.org/data/2.5/forecast?units=imperial&lat=".concat(lat, "&lon=").concat(lon, "&appid=").concat(process.env.OPEN_WEATHER_API_KEY))
+                    // returns 5 day forcast in 3 hour increments
+                    // only collect data at 12pm
+                ];
+            case 1:
+                apiRes = _b.sent();
+                weatherForcast = [];
+                idxIncrement = 8;
+                numWeatherPoints = apiRes.data.list.length;
+                for (i = idxIncrement / 2; i < numWeatherPoints; i += idxIncrement) {
+                    curWeatherData = apiRes.data.list[i];
+                    dateStrSplit = curWeatherData.dt_txt.split(' ')[0].split('-');
+                    monthStr = dateStrSplit[1];
+                    dateStr = dateStrSplit[2];
+                    weatherForcast.push({
+                        temp: curWeatherData.main.temp,
+                        weatherIcon: "https://openweathermap.org/img/wn/".concat(curWeatherData.weather[0].icon, "@2x.png"),
+                        displayDate: "".concat(monthStr, "/").concat(dateStr),
+                    });
+                }
+                res.json(weatherForcast);
+                return [2 /*return*/];
+        }
+    });
+}); });
 app.listen(process.env.PORT, function () {
     return console.log("Running server on http://localhost".concat(process.env.PORT));
 });
