@@ -61,7 +61,7 @@ app.get('/place', function (req, res) { return __awaiter(void 0, void 0, void 0,
                 res.json(apiRes.data.results.map(function (item) {
                     return {
                         name: item.name,
-                        photoReference: item.photos[0].photo_reference,
+                        photoUrl: "https://maps.googleapis.com/maps/api/place/photo?photo_reference=".concat(item.photos[0].photo_reference, "&maxwidth=400&key=").concat(process.env.GOOGLE_MAPS_API_KEY),
                         priceLevel: item.price_level,
                         rating: item.rating,
                         numRatings: item.user_ratings_total,
