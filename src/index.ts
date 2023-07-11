@@ -22,7 +22,18 @@ app.get('/place', async (req, res) => {
   const apiRes = await axios.get(
     `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${process.env.GOOGLE_MAPS_API_KEY}&type=${type}&radius=50000`
   )
-  res.json(apiRes.data)
+
+  res.json(
+    apiRes.data.results.map((item: any) => {
+      return {
+        name: item.name,
+        photoReference: item.photos[0].photo_reference,
+        priceLevel: item.price_level,
+        rating: item.rating,
+        numRatings: item.user_ratings_total,
+      }
+    })
+  )
 })
 
 app.listen(process.env.PORT, () =>

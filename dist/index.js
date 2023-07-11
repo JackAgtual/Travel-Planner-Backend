@@ -58,7 +58,15 @@ app.get('/place', function (req, res) { return __awaiter(void 0, void 0, void 0,
                 return [4 /*yield*/, axios_1.default.get("https://maps.googleapis.com/maps/api/place/textsearch/json?query=".concat(query, "&key=").concat(process.env.GOOGLE_MAPS_API_KEY, "&type=").concat(type, "&radius=50000"))];
             case 1:
                 apiRes = _b.sent();
-                res.json(apiRes.data);
+                res.json(apiRes.data.results.map(function (item) {
+                    return {
+                        name: item.name,
+                        photoReference: item.photos[0].photo_reference,
+                        priceLevel: item.price_level,
+                        rating: item.rating,
+                        numRatings: item.user_ratings_total,
+                    };
+                }));
                 return [2 /*return*/];
         }
     });
