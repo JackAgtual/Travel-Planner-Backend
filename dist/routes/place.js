@@ -42,6 +42,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var axios_1 = __importDefault(require("axios"));
 var router = (0, express_1.Router)();
+var imageMaxWidth = 400;
+var placeholderImage = "https://placehold.co/".concat(imageMaxWidth);
 router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, query, type, apiRes;
     return __generator(this, function (_b) {
@@ -52,10 +54,17 @@ router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, f
             case 1:
                 apiRes = _b.sent();
                 res.json(apiRes.data.results.map(function (item) {
+                    var photoUrl;
+                    try {
+                        photoUrl = "https://maps.googleapis.com/maps/api/place/photo?photo_reference=".concat(item.photos[0].photo_reference, "&maxwidth=").concat(imageMaxWidth, "&key=").concat(process.env.GOOGLE_MAPS_API_KEY);
+                    }
+                    catch (_a) {
+                        photoUrl = placeholderImage;
+                    }
                     return {
                         name: item.name,
-                        photoUrl: "https://maps.googleapis.com/maps/api/place/photo?photo_reference=".concat(item.photos[0].photo_reference, "&maxwidth=400&key=").concat(process.env.GOOGLE_MAPS_API_KEY),
-                        priceLevel: item.price_level,
+                        photoUrl: photoUrl,
+                        priceLevel: item.price_level || -1,
                         rating: item.rating,
                         numRatings: item.user_ratings_total,
                     };

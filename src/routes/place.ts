@@ -8,6 +8,9 @@ type placeQueryParams = {
   type: string
 }
 
+const imageMaxWidth = 400
+const placeholderImage = `https://placehold.co/${imageMaxWidth}`
+
 router.get('/', async (req, res) => {
   const { query, type } = req.query as placeQueryParams
 
@@ -17,10 +20,17 @@ router.get('/', async (req, res) => {
 
   res.json(
     apiRes.data.results.map((item: any) => {
+      let photoUrl
+      try {
+        photoUrl = `https://maps.googleapis.com/maps/api/place/photo?photo_reference=${item.photos[0].photo_reference}&maxwidth=${imageMaxWidth}&key=${process.env.GOOGLE_MAPS_API_KEY}`
+      } catch {
+        photoUrl = placeholderImage
+      }
+
       return {
         name: item.name,
-        photoUrl: `https://maps.googleapis.com/maps/api/place/photo?photo_reference=${item.photos[0].photo_reference}&maxwidth=400&key=${process.env.GOOGLE_MAPS_API_KEY}`,
-        priceLevel: item.price_level,
+        photoUrl,
+        priceLevel: item.price_level || -1,
         rating: item.rating,
         numRatings: item.user_ratings_total,
       }
