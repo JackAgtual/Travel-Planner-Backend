@@ -1,7 +1,8 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import axios from 'axios'
 const cors = require('cors')
+
+const PORT = process.env.PORT || 8000
 
 dotenv.config()
 const app = express()
@@ -17,5 +18,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(process.env.PORT, () =>
-  console.log(`Running server on http://localhost${process.env.PORT}`)
+  console.log(`Running server on http://localhost${PORT}`)
 )

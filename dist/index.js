@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var dotenv_1 = __importDefault(require("dotenv"));
 var cors = require('cors');
+var PORT = process.env.PORT || 8000;
 dotenv_1.default.config();
 var app = (0, express_1.default)();
 app.use(cors());
@@ -17,5 +18,5 @@ app.get('/', function (req, res) {
     res.send('Hello world');
 });
 app.listen(process.env.PORT, function () {
-    return console.log("Running server on http://localhost".concat(process.env.PORT));
+    return console.log("Running server on http://localhost".concat(PORT));
 });
