@@ -45,12 +45,12 @@ var router = (0, express_1.Router)();
 var imageMaxWidth = 400;
 var placeholderImage = "https://placehold.co/".concat(imageMaxWidth);
 router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, query, type, apiRes;
+    var _a, destination, type, apiRes;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _a = req.query, query = _a.query, type = _a.type;
-                return [4 /*yield*/, axios_1.default.get("https://maps.googleapis.com/maps/api/place/textsearch/json?query=".concat(query, "&key=").concat(process.env.GOOGLE_MAPS_API_KEY, "&type=").concat(type, "&radius=50000"))];
+                _a = req.query, destination = _a.destination, type = _a.type;
+                return [4 /*yield*/, axios_1.default.get("https://maps.googleapis.com/maps/api/place/textsearch/json?query=".concat(destination, "&key=").concat(process.env.GOOGLE_MAPS_API_KEY, "&type=").concat(type, "&radius=50000"))];
             case 1:
                 apiRes = _b.sent();
                 res.json(apiRes.data.results.map(function (item) {

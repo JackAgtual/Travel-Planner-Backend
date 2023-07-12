@@ -4,7 +4,7 @@ import axios from 'axios'
 const router = Router()
 
 type placeQueryParams = {
-  query: string
+  destination: string
   type: string
 }
 
@@ -12,10 +12,10 @@ const imageMaxWidth = 400
 const placeholderImage = `https://placehold.co/${imageMaxWidth}`
 
 router.get('/', async (req, res) => {
-  const { query, type } = req.query as placeQueryParams
+  const { destination, type } = req.query as placeQueryParams
 
   const apiRes = await axios.get(
-    `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${process.env.GOOGLE_MAPS_API_KEY}&type=${type}&radius=50000`
+    `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${destination}&key=${process.env.GOOGLE_MAPS_API_KEY}&type=${type}&radius=50000`
   )
 
   res.json(
