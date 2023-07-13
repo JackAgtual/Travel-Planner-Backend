@@ -53,7 +53,9 @@ router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 return [4 /*yield*/, axios_1.default.get("https://maps.googleapis.com/maps/api/place/textsearch/json?query=".concat(destination, "&key=").concat(process.env.GOOGLE_MAPS_API_KEY, "&type=").concat(type, "&radius=50000"))];
             case 1:
                 apiRes = _b.sent();
-                res.json(apiRes.data.results.map(function (item) {
+                res.json(apiRes.data.results
+                    .filter(function (item) { return item.user_ratings_total > 0; })
+                    .map(function (item) {
                     var photoUrl;
                     try {
                         photoUrl = "https://maps.googleapis.com/maps/api/place/photo?photo_reference=".concat(item.photos[0].photo_reference, "&maxwidth=").concat(imageMaxWidth, "&key=").concat(process.env.GOOGLE_MAPS_API_KEY);
