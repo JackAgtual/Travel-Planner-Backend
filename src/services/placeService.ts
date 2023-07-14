@@ -76,8 +76,7 @@ export default function PlaceService() {
     }
 
     const locationResults = await _getLocationData(destination)
-    console.log(locationResults)
-    return { ...locationResults, places: placeResults }
+    return { ...locationResults, placeTypes: placeResults }
   }
 
   return {
