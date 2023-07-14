@@ -26,6 +26,30 @@ export default function PlaceService() {
       })
   }
 
+  const _getLocationData = async (destination: string) => {
+    const apiRes = await axios.get(
+      `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${destination}&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry&key=${process.env.GOOGLE_MAPS_API_KEY}`
+    )
+
+    const placeCandidates = apiRes.data.candidates
+    if (placeCandidates.length === 0) {
+      return {
+        address: 'unknown',
+        locationName: 'unknown',
+        lat: undefined,
+        lon: undefined,
+      }
+    }
+
+    const place = placeCandidates[0]
+    return {
+      address: place.formatted_address,
+      locationName: place.name,
+      lat: place.geometry.location.lat,
+      lon: place.geometry.location.lng,
+    }
+  }
+
   const getPlaceData = async ({
     destination,
     types,
@@ -39,15 +63,17 @@ export default function PlaceService() {
       }
     })
 
-    const results = []
+    const placeResults = []
     for (const type of types) {
       const apiRes = await axios.get(
         `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${destination}&key=${process.env.GOOGLE_MAPS_API_KEY}&type=${type}&radius=50000`
       )
-      results.push({ type, data: _processWeatherData(apiRes, imageMaxWidth) })
+      placeResults.push({ type, data: _processWeatherData(apiRes, imageMaxWidth) })
     }
 
-    return results
+    const locationResults = await _getLocationData(destination)
+    console.log(locationResults)
+    return { ...locationResults, places: placeResults }
   }
 
   return {
