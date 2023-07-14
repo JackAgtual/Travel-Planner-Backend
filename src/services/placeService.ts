@@ -1,25 +1,12 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { placeQueryParams, allowableTypes } from '../types/placeTypes'
 
 export default function PlaceService() {
-  const getPlaceData = async ({
-    destination,
-    types,
-    imageMaxWidth,
-  }: placeQueryParams) => {
-    // input validation
-    imageMaxWidth = imageMaxWidth || 400
-    types.forEach((type) => {
-      if (!allowableTypes.has(type)) {
-        throw new Error('Invalid type')
-      }
-    })
-
-    const apiRes = await axios.get(
-      `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${destination}&key=${process.env.GOOGLE_MAPS_API_KEY}&type=${types}&radius=50000`
-    )
-
-    return apiRes.data.results
+  const _processWeatherData = (
+    apiResponse: AxiosResponse<any, any>,
+    imageMaxWidth: Number
+  ) => {
+    return apiResponse.data.results
       .filter((item: any) => item.user_ratings_total > 0)
       .map((item: any) => {
         let photoUrl
@@ -37,6 +24,30 @@ export default function PlaceService() {
           numRatings: item.user_ratings_total,
         }
       })
+  }
+
+  const getPlaceData = async ({
+    destination,
+    types,
+    imageMaxWidth,
+  }: placeQueryParams) => {
+    // input validation
+    imageMaxWidth = imageMaxWidth || 400
+    types.forEach((type) => {
+      if (!allowableTypes.has(type)) {
+        throw new Error('Invalid type')
+      }
+    })
+
+    const results = []
+    for (const type of types) {
+      const apiRes = await axios.get(
+        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${destination}&key=${process.env.GOOGLE_MAPS_API_KEY}&type=${type}&radius=50000`
+      )
+      results.push({ type, data: _processWeatherData(apiRes, imageMaxWidth) })
+    }
+
+    return results
   }
 
   return {
