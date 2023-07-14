@@ -8,6 +8,10 @@ export default function PlaceService() {
   ) => {
     return apiResponse.data.results
       .filter((item: any) => item.user_ratings_total > 0)
+      .sort(
+        (a: any, b: any) =>
+          b.rating - a.rating || b.user_ratings_total - a.user_ratings_total
+      )
       .map((item: any) => {
         let photoUrl
         try {
