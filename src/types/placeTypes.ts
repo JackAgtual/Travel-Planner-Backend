@@ -31,3 +31,7 @@ export const allowableTypes = new Set([
   'night_club',
   'tourist_attraction',
 ])
+
+export type geopointQueryParams = {
+  destination: string
+}

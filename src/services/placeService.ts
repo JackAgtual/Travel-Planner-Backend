@@ -30,19 +30,14 @@ export default function PlaceService() {
       })
   }
 
-  const _getLocationData = async (destination: string) => {
+  const getGeopointData = async (destination: string) => {
     const apiRes = await axios.get(
       `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${destination}&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry&key=${process.env.GOOGLE_MAPS_API_KEY}`
     )
 
     const placeCandidates = apiRes.data.candidates
     if (placeCandidates.length === 0) {
-      return {
-        address: 'unknown',
-        locationName: 'unknown',
-        lat: undefined,
-        lon: undefined,
-      }
+      throw new Error('Could not find geopoint')
     }
 
     const place = placeCandidates[0]
@@ -75,11 +70,11 @@ export default function PlaceService() {
       placeResults.push({ type, data: _processWeatherData(apiRes, imageMaxWidth) })
     }
 
-    const locationResults = await _getLocationData(destination)
-    return { ...locationResults, placeTypes: placeResults }
+    return placeResults
   }
 
   return {
     getPlaceData,
+    getGeopointData,
   }
 }
