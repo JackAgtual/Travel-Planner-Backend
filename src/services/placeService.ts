@@ -67,6 +67,10 @@ export default function PlaceService() {
         throw new Error('Invalid type')
       }
     })
+    types.sort((a, b) => {
+      if (a < b) return -1
+      return 1
+    })
 
     const placeResults = []
     for (const type of types) {
