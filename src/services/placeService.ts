@@ -2,16 +2,22 @@ import axios, { AxiosResponse } from 'axios'
 import { placeQueryParams, allowableTypes } from '../types/placeTypes'
 
 export default function PlaceService() {
+  const _getEffectiveRating = (place: any) => {
+    // use Laplace's rule of succession to get effective rating
+    return (
+      ((place.rating / 5) * place.user_ratings_total + 1) / (place.user_ratings_total + 2)
+    )
+  }
+
   const _processWeatherData = (
     apiResponse: AxiosResponse<any, any>,
     imageMaxWidth: Number
   ) => {
     return apiResponse.data.results
       .filter((item: any) => item.user_ratings_total > 0)
-      .sort(
-        (a: any, b: any) =>
-          b.rating - a.rating || b.user_ratings_total - a.user_ratings_total
-      )
+      .sort((a: any, b: any) => {
+        _getEffectiveRating(b) - _getEffectiveRating(a)
+      })
       .map((item: any) => {
         let photoUrl
         try {
