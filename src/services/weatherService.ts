@@ -26,12 +26,14 @@ export default function WeatherService() {
       )
       const displayDate: string = weatherToday[0].dt_txt.split(' ')[0]
       const icon = `https://openweathermap.org/img/wn/${weatherToday[midIdx].weather[0].icon}@2x.png`
+      const description = weatherToday[midIdx].weather[0].main
 
       reducedData.push({
         minTemp,
         maxTemp,
         displayDate,
         icon,
+        description,
       })
 
       startIdx += entriesPerDay
