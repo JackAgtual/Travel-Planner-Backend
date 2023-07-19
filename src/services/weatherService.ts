@@ -1,35 +1,43 @@
-import axios, { AxiosResponse } from 'axios'
-import { weatherForecast, forecastQueryParams } from '../types/weatherTypes'
+import axios from 'axios'
+import { forecastQueryParams } from '../types/weatherTypes'
 
 export default function WeatherService() {
-  const _reduceForcastResponse = (apiResponse: AxiosResponse<any, any>) => {
-    // returns 5 day forcast in 3 hour increments
-    // only collect data at 12pm
-    const weatherForcast: weatherForecast[] = []
-    const idxIncrement = 8
-    const numWeatherPoints = apiResponse.data.list.length
-
-    for (let i = idxIncrement / 2; i < numWeatherPoints; i += idxIncrement) {
-      const curWeatherData = apiResponse.data.list[i]
-
-      const dateStrSplit: string[] = curWeatherData.dt_txt.split(' ')[0].split('-')
-      const monthStr = dateStrSplit[1]
-      const dateStr = dateStrSplit[2]
-
-      weatherForcast.push({
-        temp: curWeatherData.main.temp,
-        weatherIcon: `https://openweathermap.org/img/wn/${curWeatherData.weather[0].icon}@2x.png`,
-        displayDate: `${monthStr}/${dateStr}`,
-      })
-    }
-    return weatherForcast
-  }
-
   const getForcast = async ({ lat, lon }: forecastQueryParams) => {
     const apiRes = await axios.get(
       `https://api.openweathermap.org/data/2.5/forecast?units=imperial&lat=${lat}&lon=${lon}&appid=${process.env.OPEN_WEATHER_API_KEY}`
     )
-    return _reduceForcastResponse(apiRes)
+    const { list: weatherData, cnt: numResults } = apiRes.data
+
+    // weather data is an array of weather data
+    // 5 day forcast in 3 hour increments
+    // does not account for timezones
+    const entriesPerDay = 8
+    let [startIdx, midIdx, stopIdx] = [0, 3, entriesPerDay]
+    const reducedData = []
+    while (stopIdx <= numResults) {
+      // aggregate weather data for one day
+      const weatherToday = weatherData.slice(startIdx, stopIdx)
+
+      const minTemp = Math.min(
+        ...weatherToday.map((curWeather: any) => curWeather.main.temp_min)
+      )
+      const maxTemp = Math.max(
+        ...weatherToday.map((curWeather: any) => curWeather.main.temp_max)
+      )
+      const displayDate: string = weatherToday[0].dt_txt.split(' ')[0]
+      const icon = `https://openweathermap.org/img/wn/${weatherToday[midIdx].weather[0].icon}@2x.png`
+
+      reducedData.push({
+        minTemp,
+        maxTemp,
+        displayDate,
+        icon,
+      })
+
+      startIdx += entriesPerDay
+      stopIdx += entriesPerDay
+    }
+    return reducedData
   }
 
   return {
