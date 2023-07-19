@@ -18,11 +18,11 @@ export default function WeatherService() {
       // aggregate weather data for one day
       const weatherToday = weatherData.slice(startIdx, stopIdx)
 
-      const minTemp = Math.min(
-        ...weatherToday.map((curWeather: any) => curWeather.main.temp_min)
+      const minTemp = Math.round(
+        Math.min(...weatherToday.map((curWeather: any) => curWeather.main.temp_min))
       )
-      const maxTemp = Math.max(
-        ...weatherToday.map((curWeather: any) => curWeather.main.temp_max)
+      const maxTemp = Math.round(
+        Math.max(...weatherToday.map((curWeather: any) => curWeather.main.temp_max))
       )
       const displayDate: string = weatherToday[0].dt_txt.split(' ')[0]
       const icon = `https://openweathermap.org/img/wn/${weatherToday[midIdx].weather[0].icon}@2x.png`
