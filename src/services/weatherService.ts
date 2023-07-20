@@ -24,7 +24,12 @@ export default function WeatherService() {
       const maxTemp = Math.round(
         Math.max(...weatherToday.map((curWeather: any) => curWeather.main.temp_max))
       )
-      const displayDate: string = weatherToday[0].dt_txt.split(' ')[0]
+
+      const displayDate: string = weatherToday[0].dt_txt
+        .split(' ')[0]
+        .split('-')
+        .slice(1)
+        .join('/') // mm/dd
       const icon = `https://openweathermap.org/img/wn/${weatherToday[midIdx].weather[0].icon}@2x.png`
       const description = weatherToday[midIdx].weather[0].main
 
