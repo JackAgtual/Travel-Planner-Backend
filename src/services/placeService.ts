@@ -11,7 +11,7 @@ export default function PlaceService() {
 
   const _processWeatherData = (
     apiResponse: AxiosResponse<any, any>,
-    imageMaxWidth: Number
+    imageMaxWidth: Number,
   ) => {
     return apiResponse.data.results
       .filter((item: any) => item.user_ratings_total > 0)
@@ -38,7 +38,7 @@ export default function PlaceService() {
 
   const getGeopointData = async (destination: string) => {
     const apiRes = await axios.get(
-      `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${destination}&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry&key=${process.env.GOOGLE_MAPS_API_KEY}`
+      `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${destination}&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry&key=${process.env.GOOGLE_MAPS_API_KEY}`,
     )
 
     const placeCandidates = apiRes.data.candidates
@@ -75,7 +75,7 @@ export default function PlaceService() {
     const placeResults = []
     for (const type of types) {
       const apiRes = await axios.get(
-        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${destination}&key=${process.env.GOOGLE_MAPS_API_KEY}&type=${type}&radius=50000`
+        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${destination}&key=${process.env.GOOGLE_MAPS_API_KEY}&type=${type}&radius=50000`,
       )
       placeResults.push({ type, data: _processWeatherData(apiRes, imageMaxWidth) })
     }

@@ -4,7 +4,7 @@ import { forecastQueryParams } from '../types/weatherTypes'
 export default function WeatherService() {
   const getForcast = async ({ lat, lon }: forecastQueryParams) => {
     const apiRes = await axios.get(
-      `https://api.openweathermap.org/data/2.5/forecast?units=imperial&lat=${lat}&lon=${lon}&appid=${process.env.OPEN_WEATHER_API_KEY}`
+      `https://api.openweathermap.org/data/2.5/forecast?units=imperial&lat=${lat}&lon=${lon}&appid=${process.env.OPEN_WEATHER_API_KEY}`,
     )
     const { list: weatherData, cnt: numResults } = apiRes.data
 
@@ -19,10 +19,10 @@ export default function WeatherService() {
       const weatherToday = weatherData.slice(startIdx, stopIdx)
 
       const minTemp = Math.round(
-        Math.min(...weatherToday.map((curWeather: any) => curWeather.main.temp_min))
+        Math.min(...weatherToday.map((curWeather: any) => curWeather.main.temp_min)),
       )
       const maxTemp = Math.round(
-        Math.max(...weatherToday.map((curWeather: any) => curWeather.main.temp_max))
+        Math.max(...weatherToday.map((curWeather: any) => curWeather.main.temp_max)),
       )
 
       const displayDate: string = weatherToday[0].dt_txt
