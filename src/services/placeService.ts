@@ -32,6 +32,10 @@ export default function PlaceService() {
           priceLevel: item.price_level || -1,
           rating: item.rating,
           numRatings: item.user_ratings_total,
+          location: {
+            lat: item.geometry.location.lat,
+            lon: item.geometry.location.lng,
+          },
         }
       })
   }
