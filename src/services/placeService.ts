@@ -26,15 +26,24 @@ export default function PlaceService() {
           photoUrl = `https://placehold.co/${imageMaxWidth}`
         }
 
+        const addressComponents: string[] = item.formatted_address.split(',')
+        const line1 = addressComponents[0].trim()
+        const line2 = addressComponents.slice(1, -1).join(',').trim()
+
         return {
           name: item.name,
           photoUrl,
+          icon: item.icon,
           priceLevel: item.price_level || -1,
           rating: item.rating,
           numRatings: item.user_ratings_total,
           location: {
             lat: item.geometry.location.lat,
             lon: item.geometry.location.lng,
+          },
+          address: {
+            line1,
+            line2,
           },
         }
       })
