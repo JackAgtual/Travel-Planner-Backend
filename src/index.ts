@@ -14,6 +14,7 @@ app.use(
     max: 30,
   }),
 )
+app.set('trust proxy', 1)
 
 const placeRouter = require('./routes/place')
 const weatherRouter = require('./routes/weather')
