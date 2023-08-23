@@ -1,12 +1,19 @@
 import express from 'express'
 import dotenv from 'dotenv'
 const cors = require('cors')
+const rateLimit = require('express-rate-limit')
 
 const PORT = process.env.PORT || 8000
 
 dotenv.config()
 const app = express()
 app.use(cors())
+app.use(
+  rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 min
+    max: 30,
+  }),
+)
 
 const placeRouter = require('./routes/place')
 const weatherRouter = require('./routes/weather')
