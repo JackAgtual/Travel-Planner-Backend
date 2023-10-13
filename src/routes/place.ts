@@ -5,7 +5,7 @@ import { geopointQueryParams, placeQueryParams } from '../types/placeTypes'
 const router = Router()
 const placeService = PlaceService()
 
-router.get('/', async (req, res) => {
+router.get('/search', async (req, res) => {
   const { destination, types, imageMaxWidth } = req.query as placeQueryParams
 
   try {
