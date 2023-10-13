@@ -9,7 +9,7 @@ export default function PlaceService() {
     )
   }
 
-  const _processWeatherData = (
+  const _processPlaceData = (
     apiResponse: AxiosResponse<any, any>,
     imageMaxWidth: Number,
   ) => {
@@ -33,6 +33,7 @@ export default function PlaceService() {
         return {
           name: item.name,
           photoUrl,
+          id: item.place_id,
           icon: item.icon,
           priceLevel: item.price_level || -1,
           rating: item.rating,
@@ -75,6 +76,7 @@ export default function PlaceService() {
   }: placeQueryParams) => {
     // input validation
     imageMaxWidth = imageMaxWidth || 400
+
     types.forEach((type) => {
       if (!allowableTypes.has(type)) {
         throw new Error('Invalid type')
@@ -90,7 +92,7 @@ export default function PlaceService() {
       const apiRes = await axios.get(
         `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${destination}&key=${process.env.GOOGLE_MAPS_API_KEY}&type=${type}&radius=50000`,
       )
-      placeResults.push({ type, data: _processWeatherData(apiRes, imageMaxWidth) })
+      placeResults.push({ type, data: _processPlaceData(apiRes, imageMaxWidth) })
     }
 
     return placeResults
