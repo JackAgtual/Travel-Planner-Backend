@@ -1,7 +1,11 @@
 import axios, { AxiosResponse } from 'axios'
 import { placeQueryParams, allowableTypes } from '../types/placeTypes'
 
+const apiKey = process.env.GOOGLE_MAPS_API_KEY
+
 export default function PlaceService() {
+  const baseUrl = 'https://maps.googleapis.com/maps/api/place'
+
   const _getEffectiveRating = (place: any) => {
     // use Laplace's rule of succession to get effective rating
     return (
@@ -21,7 +25,7 @@ export default function PlaceService() {
       .map((item: any) => {
         let photoUrl
         try {
-          photoUrl = `https://maps.googleapis.com/maps/api/place/photo?photo_reference=${item.photos[0].photo_reference}&maxwidth=${imageMaxWidth}&key=${process.env.GOOGLE_MAPS_API_KEY}`
+          photoUrl = `${baseUrl}/photo?photo_reference=${item.photos[0].photo_reference}&maxwidth=${imageMaxWidth}&key=${apiKey}`
         } catch {
           photoUrl = `https://placehold.co/${imageMaxWidth}`
         }
@@ -52,7 +56,7 @@ export default function PlaceService() {
 
   const getGeopointData = async (destination: string) => {
     const apiRes = await axios.get(
-      `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${destination}&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry&key=${process.env.GOOGLE_MAPS_API_KEY}`,
+      `${baseUrl}/findplacefromtext/json?input=${destination}&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry&key=${apiKey}`,
     )
 
     const placeCandidates = apiRes.data.candidates
@@ -90,7 +94,7 @@ export default function PlaceService() {
     const placeResults = []
     for (const type of types) {
       const apiRes = await axios.get(
-        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${destination}&key=${process.env.GOOGLE_MAPS_API_KEY}&type=${type}&radius=50000`,
+        `${baseUrl}/textsearch/json?query=${destination}&key=${apiKey}&type=${type}&radius=50000`,
       )
       placeResults.push({ type, data: _processPlaceData(apiRes, imageMaxWidth) })
     }
