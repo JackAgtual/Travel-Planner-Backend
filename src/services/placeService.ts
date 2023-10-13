@@ -112,6 +112,7 @@ export default function PlaceService() {
       'formatted_address',
       'formatted_phone_number',
       'website',
+      'opening_hours',
     ]
       .reduce((acc: any, cur: any) => {
         return acc + cur + ','
@@ -133,6 +134,7 @@ export default function PlaceService() {
       photosUrls,
       id: data.place_id,
       website: data.website,
+      businessHours: data.opening_hours.weekday_text,
     }
   }
 
