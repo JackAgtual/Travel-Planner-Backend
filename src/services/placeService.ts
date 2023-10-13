@@ -13,9 +13,17 @@ export default function PlaceService() {
     )
   }
 
+  const _getPhotoUrl = (photoReference: string, maxWidth: number = 400) => {
+    try {
+      return `${baseUrl}/photo?photo_reference=${photoReference}&maxwidth=${maxWidth}&key=${apiKey}`
+    } catch {
+      return `https://placehold.co/${maxWidth}`
+    }
+  }
+
   const _processPlaceData = (
     apiResponse: AxiosResponse<any, any>,
-    imageMaxWidth: Number,
+    imageMaxWidth: number,
   ) => {
     return apiResponse.data.results
       .filter((item: any) => item.user_ratings_total > 0)
@@ -23,12 +31,7 @@ export default function PlaceService() {
         _getEffectiveRating(b) - _getEffectiveRating(a)
       })
       .map((item: any) => {
-        let photoUrl
-        try {
-          photoUrl = `${baseUrl}/photo?photo_reference=${item.photos[0].photo_reference}&maxwidth=${imageMaxWidth}&key=${apiKey}`
-        } catch {
-          photoUrl = `https://placehold.co/${imageMaxWidth}`
-        }
+        const photoUrl = _getPhotoUrl(item.photos[0].photo_reference, imageMaxWidth)
 
         const addressComponents: string[] = item.formatted_address.split(',')
         const line1 = addressComponents[0].trim()
@@ -118,7 +121,19 @@ export default function PlaceService() {
     const apiRes = await axios.get(
       `${baseUrl}/details/json?place_id=${id}&key=${apiKey}&fields=${fields}`,
     )
-    return apiRes.data.result
+    const data = apiRes.data.result
+
+    const photosUrls = data.photos.map((photo: any) =>
+      _getPhotoUrl(photo.photo_reference, 1000),
+    )
+
+    return {
+      address: data.formatted_address,
+      phoneNumber: data.formatted_phone_number,
+      photosUrls,
+      id: data.place_id,
+      website: data.website,
+    }
   }
 
   return {
