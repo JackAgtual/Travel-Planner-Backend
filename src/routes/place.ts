@@ -1,6 +1,10 @@
 import { Router } from 'express'
 import PlaceService from '../services/placeService'
-import { geopointQueryParams, placeQueryParams } from '../types/placeTypes'
+import {
+  detailsQueryParams,
+  geopointQueryParams,
+  placeQueryParams,
+} from '../types/placeTypes'
 
 const router = Router()
 const placeService = PlaceService()
@@ -10,6 +14,17 @@ router.get('/search', async (req, res) => {
 
   try {
     const results = await placeService.getPlaceData({ destination, types, imageMaxWidth })
+    res.json(results)
+  } catch (error) {
+    res.status(400).send(error)
+  }
+})
+
+router.get('/details', async (req, res) => {
+  const { id } = req.query as detailsQueryParams
+
+  try {
+    const results = await placeService.getPlaceDetails({ id })
     res.json(results)
   } catch (error) {
     res.status(400).send(error)

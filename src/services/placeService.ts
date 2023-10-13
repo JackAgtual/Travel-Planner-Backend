@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
-import { placeQueryParams, allowableTypes } from '../types/placeTypes'
+import { placeQueryParams, allowableTypes, detailsQueryParams } from '../types/placeTypes'
 
 const apiKey = process.env.GOOGLE_MAPS_API_KEY
 
@@ -102,8 +102,28 @@ export default function PlaceService() {
     return placeResults
   }
 
+  const getPlaceDetails = async ({ id }: detailsQueryParams) => {
+    const fields = [
+      'place_id',
+      'photo',
+      'formatted_address',
+      'formatted_phone_number',
+      'website',
+    ]
+      .reduce((acc: any, cur: any) => {
+        return acc + cur + ','
+      }, '')
+      .slice(0, -1)
+
+    const apiRes = await axios.get(
+      `${baseUrl}/details/json?place_id=${id}&key=${apiKey}&fields=${fields}`,
+    )
+    return apiRes.data.result
+  }
+
   return {
     getPlaceData,
     getGeopointData,
+    getPlaceDetails,
   }
 }
