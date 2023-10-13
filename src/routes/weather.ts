@@ -8,9 +8,12 @@ const weatherService = WeatherService()
 router.get('/forecast', async (req, res) => {
   const { lat, lon } = req.query as forecastQueryParams
 
-  const result = await weatherService.getForcast({ lat, lon })
-
-  res.json(result)
+  try {
+    const result = await weatherService.getForcast({ lat, lon })
+    res.json(result)
+  } catch (error) {
+    res.status(400).send(error)
+  }
 })
 
 module.exports = router

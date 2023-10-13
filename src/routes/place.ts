@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     const results = await placeService.getPlaceData({ destination, types, imageMaxWidth })
     res.json(results)
   } catch (error) {
-    res.status(400).send('Invalid types')
+    res.status(400).send(error)
   }
 })
 
@@ -22,8 +22,8 @@ router.get('/geopoint', async (req, res) => {
   try {
     const results = await placeService.getGeopointData(destination)
     res.json(results)
-  } catch {
-    res.status(400).send('No geopoint found')
+  } catch (error) {
+    res.status(400).send(error)
   }
 })
 
