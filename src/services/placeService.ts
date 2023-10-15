@@ -114,6 +114,7 @@ export default function PlaceService() {
       'website',
       'opening_hours',
       'url',
+      'reviews',
     ]
       .reduce((acc: any, cur: any) => {
         return acc + cur + ','
@@ -125,9 +126,18 @@ export default function PlaceService() {
     )
     const data = apiRes.data.result
 
-    const photosUrls = data.photos.map((photo: any) =>
+    const photosUrls = data.photos?.map((photo: any) =>
       _getPhotoUrl(photo.photo_reference, 1000),
     )
+
+    const reviews = data.reviews?.map((review: any) => ({
+      author: review.author_name,
+      authorUrl: review.author_url,
+      authorPhoto: review.profile_photo_url,
+      rating: review.rating,
+      time: review.relative_time_description,
+      text: review.text,
+    }))
 
     return {
       address: {
@@ -138,7 +148,8 @@ export default function PlaceService() {
       photosUrls,
       id: data.place_id,
       website: data.website,
-      businessHours: data.opening_hours.weekday_text,
+      businessHours: data.opening_hours?.weekday_text,
+      reviews,
     }
   }
 
