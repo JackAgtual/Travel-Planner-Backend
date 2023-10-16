@@ -115,6 +115,7 @@ export default function PlaceService() {
       'opening_hours',
       'url',
       'reviews',
+      'editorial_summary',
     ]
       .reduce((acc: any, cur: any) => {
         return acc + cur + ','
@@ -150,6 +151,7 @@ export default function PlaceService() {
       website: data.website,
       businessHours: data.opening_hours?.weekday_text,
       reviews,
+      description: data.editorial_summary.overview,
     }
   }
 

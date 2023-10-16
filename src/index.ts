@@ -11,7 +11,7 @@ app.use(cors())
 app.use(
   rateLimit({
     windowMs: 1 * 60 * 1000, // 1 min
-    max: 30,
+    max: 500000,
   }),
 )
 app.set('trust proxy', 1)
