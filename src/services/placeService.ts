@@ -142,16 +142,16 @@ export default function PlaceService() {
 
     return {
       address: {
-        formatted: data.formatted_address,
-        googleMapsUrl: data.url,
+        formatted: data.formatted_address || null,
+        googleMapsUrl: data.url || null,
       },
-      phoneNumber: data.formatted_phone_number,
+      phoneNumber: data.formatted_phone_number || null,
       photosUrls,
-      id: data.place_id,
-      website: data.website,
-      businessHours: data.opening_hours?.weekday_text,
+      id: data.place_id || null,
+      website: data.website || null,
+      businessHours: data.opening_hours?.weekday_text || null,
       reviews,
-      description: data.editorial_summary.overview,
+      description: data.editorial_summary?.overview || null,
     }
   }
 
