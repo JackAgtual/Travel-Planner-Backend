@@ -127,7 +127,7 @@ export default function PlaceService() {
     )
     const data = apiRes.data.result
 
-    const photosUrls = data.photos?.map((photo: any) =>
+    const photoUrls = data.photos?.map((photo: any) =>
       _getPhotoUrl(photo.photo_reference, 1000),
     )
 
@@ -146,7 +146,7 @@ export default function PlaceService() {
         googleMapsUrl: data.url || null,
       },
       phoneNumber: data.formatted_phone_number || null,
-      photosUrls,
+      photoUrls,
       id: data.place_id || null,
       website: data.website || null,
       businessHours: data.opening_hours?.weekday_text || null,
